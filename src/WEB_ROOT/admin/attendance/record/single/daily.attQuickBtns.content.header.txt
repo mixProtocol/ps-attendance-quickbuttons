@@ -1,0 +1,16 @@
+<script type="text/javascript">
+
+function setInputToCurrentTime(whichInput) {
+  var trSearchTerm;
+  switch (whichInput) {
+    // TODO: Replace search strings with PS Localization Keys
+    case 'in':
+      trSearchTerm = 'Clock In';
+      break;
+    case 'out':
+      trSearchTerm = 'Clock Out';
+      break;
+  }
+  $j(`tr:contains(${trSearchTerm}) input.timeEntry`).timeEntry('setTime', new Date()) 
+}
+</script>
