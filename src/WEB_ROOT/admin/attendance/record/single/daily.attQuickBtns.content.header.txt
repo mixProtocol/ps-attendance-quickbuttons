@@ -71,8 +71,8 @@
   fragQckBtnsRow_Out.firstElementChild.appendChild(btnTimeIn_DayEnd);
   
   $j( document ).ready(function() {
-    $j(`tr:contains(${dictTimeEntryRows['in']}) td:has(input.timeEntry)`).contents().filter((_, el) => el.nodeType === 3).remove();
-    $j(`tr:contains(${dictTimeEntryRows['out']}) td:has(input.timeEntry)`).contents().filter((_, el) => el.nodeType === 3).remove();
+    $j(`tr:contains(${dictTimeEntryRows['in']}) td:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
+    $j(`tr:contains(${dictTimeEntryRows['out']}) td:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
     $j(`tr:contains(${dictTimeEntryRows['in']}) td:has(input.timeEntry)`).contents().last().append(fragQckBtnsRow_In);
     $j(`tr:contains(${dictTimeEntryRows['out']}) td:has(input.timeEntry)`).contents().last().append(fragQckBtnsRow_Out);
   });
