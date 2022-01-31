@@ -5,7 +5,21 @@
     "in": "Clock In",
     "out": "Clock Out"
   };
-  
+
+  var arrDailyTimes = new Array();
+  // mocked up array with the expected format of a PS TlistSql response
+  arrDailyTimes.push({ 
+    dtid_HH: 6,
+    dtid_MM: 30,
+    dtod_HH: 18,
+    dtod_MM: 45
+  }, {});
+
+  // Remove the last object from the array, if it's empty
+  if ($j.isEmptyObject(arrDailyTimes[arrDailyTimes.length-1])) {
+      arrDailyTimes.pop();
+  }
+
   // using a cloneable template as changing the 'type' attribute of a button causes issues on IE
   var btnButtonTemplate = document.createRange().createContextualFragment('<button type="button" class="attQuickButton"></button>').firstElementChild;
   btnButtonTemplate.setAttribute('class','attqckbttns');
@@ -13,8 +27,13 @@
   
   function setInputToTime(whichInput, timeVal) {
     if (dictTimeEntryRows.hasOwnProperty(whichInput)) {
-      if (timeVal === "now") {
-        $j(`tr:contains(${dictTimeEntryRows[whichInput]}) input.timeEntry`).timeEntry('setTime', new Date());
+      switch(timeVal) {
+        case "now":
+          $j(`tr:contains(${dictTimeEntryRows[whichInput]}) input.timeEntry`).timeEntry('setTime', new Date());
+          break;
+        case "daystart":
+          $j(`tr:contains(${dictTimeEntryRows[whichInput]}) input.timeEntry`).timeEntry('setTime', new Date(0, 0, arrDailyTimes[0].dtid_HH, arrDailyTimes[0].dtid_MM, 0));
+          break;
       }
     }
   }
@@ -26,11 +45,16 @@
   var btnTimeOut_Current = btnButtonTemplate.cloneNode();
   btnTimeOut_Current.innerText = "Current Time";
   btnTimeOut_Current.onclick = function() {setInputToTime("out", "now")};
+  
+  var btnTimeIn_DayStart = btnButtonTemplate.cloneNode();
+  btnTimeIn_DayStart.innerText = "Start of Day";
+  btnTimeIn_DayStart.onclick = function() {setInputToTime("in", "daystart")};
 
   var fragQckBtnsRow_In = document.createDocumentFragment();
   fragQckBtnsRow_In.appendChild(document.createElement("span"));
   fragQckBtnsRow_In.firstElementChild.setAttribute('class','qckbttns-row');
   fragQckBtnsRow_In.firstElementChild.appendChild(btnTimeIn_Current);
+  fragQckBtnsRow_In.firstElementChild.appendChild(btnTimeIn_DayStart);
 
   var fragQckBtnsRow_Out = document.createDocumentFragment();
   fragQckBtnsRow_Out.appendChild(document.createElement("span"));
