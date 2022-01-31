@@ -9,6 +9,7 @@
   // using a cloneable template as changing the 'type' attribute of a button causes issues on IE
   var btnButtonTemplate = document.createRange().createContextualFragment('<button type="button" class="attQuickButton"></button>').firstElementChild;
   btnButtonTemplate.setAttribute('class','attqckbttns');
+  btnButtonTemplate.setAttribute('style','margin-left:1em');
   
   function setInputToCurrentTime(whichInput) {
     if (dictTimeEntryRows.hasOwnProperty(whichInput)) {
@@ -34,13 +35,11 @@
   fragQckBtnsRow_Out.firstElementChild.setAttribute('class','qckbttns-row');
   fragQckBtnsRow_Out.firstElementChild.appendChild(btnTimeOut_Current);
 
-  // var htmlBtnRowOut = "&nbsp;<span class='attqckbttns-row'>&nbsp;<button type='button' onclick='alert()'>Current Time</button>&nbsp;<button type='button' onclick='alert()'>EndOfDay</button></span>";
-
   $j( document ).ready(function() {
-    $j("tr:contains('Clock In') td:has(input.timeEntry)").contents().filter((_, el) => el.nodeType === 3).remove();
-    $j("tr:contains('Clock Out') td:has(input.timeEntry)").contents().filter((_, el) => el.nodeType === 3).remove();
-    $j("tr:contains('Clock In') td:has(input.timeEntry)").contents().last().append(fragQckBtnsRow_In);
-    $j("tr:contains('Clock Out') td:has(input.timeEntry)").contents().last().append(fragQckBtnsRow_Out);
+    $j(`tr:contains(${dictTimeEntryRows['in']}) td:has(input.timeEntry)`).contents().filter((_, el) => el.nodeType === 3).remove();
+    $j(`tr:contains(${dictTimeEntryRows['out']}) td:has(input.timeEntry)`).contents().filter((_, el) => el.nodeType === 3).remove();
+    $j(`tr:contains(${dictTimeEntryRows['in']}) td:has(input.timeEntry)`).contents().last().append(fragQckBtnsRow_In);
+    $j(`tr:contains(${dictTimeEntryRows['out']}) td:has(input.timeEntry)`).contents().last().append(fragQckBtnsRow_Out);
   });
 })();
 </script>
