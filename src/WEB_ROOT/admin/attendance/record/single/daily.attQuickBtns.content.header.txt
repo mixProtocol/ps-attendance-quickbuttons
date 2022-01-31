@@ -11,19 +11,21 @@
   btnButtonTemplate.setAttribute('class','attqckbttns');
   btnButtonTemplate.setAttribute('style','margin-left:1em');
   
-  function setInputToCurrentTime(whichInput) {
+  function setInputToTime(whichInput, timeVal) {
     if (dictTimeEntryRows.hasOwnProperty(whichInput)) {
-      $j(`tr:contains(${dictTimeEntryRows[whichInput]}) input.timeEntry`).timeEntry('setTime', new Date());
+      if (timeVal === "now") {
+        $j(`tr:contains(${dictTimeEntryRows[whichInput]}) input.timeEntry`).timeEntry('setTime', new Date());
+      }
     }
   }
 
   var btnTimeIn_Current = btnButtonTemplate.cloneNode();
   btnTimeIn_Current.innerText = "Current Time";
-  btnTimeIn_Current.onclick = function() {setInputToCurrentTime("in")};
+  btnTimeIn_Current.onclick = function() {setInputToTime("in", "now")};
   
   var btnTimeOut_Current = btnButtonTemplate.cloneNode();
   btnTimeOut_Current.innerText = "Current Time";
-  btnTimeOut_Current.onclick = function() {setInputToCurrentTime("out")};
+  btnTimeOut_Current.onclick = function() {setInputToTime("out", "now")};
 
   var fragQckBtnsRow_In = document.createDocumentFragment();
   fragQckBtnsRow_In.appendChild(document.createElement("span"));
