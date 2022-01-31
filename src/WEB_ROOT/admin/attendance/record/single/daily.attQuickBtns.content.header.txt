@@ -23,7 +23,8 @@
   // using a cloneable template as changing the 'type' attribute of a button causes issues on IE
   var btnButtonTemplate = document.createRange().createContextualFragment('<button type="button" class="attQuickButton"></button>').firstElementChild;
   btnButtonTemplate.setAttribute('class','attqckbttns');
-  btnButtonTemplate.setAttribute('style','margin-left:1em');
+  // TODO: Set button width based on the max length of their labels
+  btnButtonTemplate.setAttribute('style','margin-left:1em;width:13ex');
   
   function setInputToTime(whichInput, timeVal) {
     if (dictTimeEntryRows.hasOwnProperty(whichInput)) {
@@ -33,6 +34,9 @@
           break;
         case "daystart":
           $j(`tr:contains(${dictTimeEntryRows[whichInput]}) input.timeEntry`).timeEntry('setTime', new Date(0, 0, arrDailyTimes[0].dtid_HH, arrDailyTimes[0].dtid_MM, 0));
+          break;
+        case "dayend":
+          $j(`tr:contains(${dictTimeEntryRows[whichInput]}) input.timeEntry`).timeEntry('setTime', new Date(0, 0, arrDailyTimes[0].dtod_HH, arrDailyTimes[0].dtod_MM, 0));
           break;
       }
     }
@@ -49,18 +53,23 @@
   var btnTimeIn_DayStart = btnButtonTemplate.cloneNode();
   btnTimeIn_DayStart.innerText = "Start of Day";
   btnTimeIn_DayStart.onclick = function() {setInputToTime("in", "daystart")};
+  
+  var btnTimeIn_DayEnd = btnButtonTemplate.cloneNode();
+  btnTimeIn_DayEnd.innerText = "End of Day";
+  btnTimeIn_DayEnd.onclick = function() {setInputToTime("out", "dayend")};
 
   var fragQckBtnsRow_In = document.createDocumentFragment();
   fragQckBtnsRow_In.appendChild(document.createElement("span"));
   fragQckBtnsRow_In.firstElementChild.setAttribute('class','qckbttns-row');
   fragQckBtnsRow_In.firstElementChild.appendChild(btnTimeIn_Current);
   fragQckBtnsRow_In.firstElementChild.appendChild(btnTimeIn_DayStart);
-
+  
   var fragQckBtnsRow_Out = document.createDocumentFragment();
   fragQckBtnsRow_Out.appendChild(document.createElement("span"));
   fragQckBtnsRow_Out.firstElementChild.setAttribute('class','qckbttns-row');
   fragQckBtnsRow_Out.firstElementChild.appendChild(btnTimeOut_Current);
-
+  fragQckBtnsRow_Out.firstElementChild.appendChild(btnTimeIn_DayEnd);
+  
   $j( document ).ready(function() {
     $j(`tr:contains(${dictTimeEntryRows['in']}) td:has(input.timeEntry)`).contents().filter((_, el) => el.nodeType === 3).remove();
     $j(`tr:contains(${dictTimeEntryRows['out']}) td:has(input.timeEntry)`).contents().filter((_, el) => el.nodeType === 3).remove();
