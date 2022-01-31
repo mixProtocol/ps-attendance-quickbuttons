@@ -1,16 +1,22 @@
 <script type="text/javascript">
-
-function setInputToCurrentTime(whichInput) {
-  var trSearchTerm;
-  switch (whichInput) {
-    // TODO: Replace search strings with PS Localization Keys
-    case 'in':
-      trSearchTerm = 'Clock In';
-      break;
-    case 'out':
-      trSearchTerm = 'Clock Out';
-      break;
+(function attQuickBtnsPlugin() {
+  var dictTimeEntryRows  = {
+    // TODO: Replace values with PS Localization Keys
+    "in": "Clock In",
+    "out": "Clock Out"
+  };
+  
+  function setInputToCurrentTime(whichInput) {
+    if (dictTimeEntryRows.hasOwnProperty(whichInput)) {
+      $j(`tr:contains(${dictTimeEntryRows[whichInput]}) input.timeEntry`).timeEntry('setTime', new Date());
+    }
   }
-  $j(`tr:contains(${trSearchTerm}) input.timeEntry`).timeEntry('setTime', new Date()) 
-}
+
+  var htmlBtnRowOut = "&nbsp;<span class='qckbttns-row'>&nbsp;<button type='button' onclick='alert()'>Current Time</button>&nbsp;<button type='button' onclick='alert()'>EndOfDay</button></span>";
+
+  $j( document ).ready(function() {
+    $j("tr:contains('Clock Out') td:has(input.timeEntry)").contents().filter((_, el) => el.nodeType === 3).remove();
+    $j("tr:contains('Clock Out') td:has(input.timeEntry)").contents().last().append(htmlBtnRowOut);
+  });
+})();
 </script>
