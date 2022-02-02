@@ -1,3 +1,4 @@
+~[if#NewDailyRecord.~(gpv.AttendanceID)=-99]
 <script type="text/javascript">
 (function attQuickBtnsPlugin() {
   var dictTimeEntryRows  = {
@@ -7,8 +8,7 @@
   };
 
   var arrDailyTimes = new Array();
-  // mocked up array with the expected format of a PS TlistSql response
-  /**
+  /**  // mocked up array with the expected format of a PS TlistSql response
   arrDailyTimes.push({ 
     dtid_HH: 6,
     dtid_MI: 30,
@@ -106,3 +106,5 @@
   });
 })();
 </script>
+[else#NewDailyRecord]
+[/if#NewDailyRecord]
