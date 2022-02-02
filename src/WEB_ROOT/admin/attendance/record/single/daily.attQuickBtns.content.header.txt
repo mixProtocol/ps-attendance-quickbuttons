@@ -2,9 +2,8 @@
 <script type="text/javascript">
 (function attQuickBtnsPlugin() {
   var dictTimeEntryRows  = {
-    // TODO: Replace values with PS Localization Keys
-    "in": "Clock In",
-    "out": "Clock Out"
+    "in":  "~[text:psx.html.admin_attendance_record_single.daily.clock_in]",   // Clock In
+    "out": "~[text:psx.html.admin_attendance_record_single.daily.clock_out]"   // Clock Out
   };
 
   var arrDailyTimes = new Array();
