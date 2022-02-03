@@ -39,7 +39,7 @@
     AND bsi.Daily_Attendance_Code = 1
   ORDER BY cald.Date_Value
   ]*/
-  ~(jsonObject),
+  ~(jsonObj),
   /*[/tlist_sql]*/{});
 
   // Remove the last object from the array, if it's empty
@@ -53,19 +53,21 @@
   // TODO: Set button width based on the max length of their labels
   btnButtonTemplate.setAttribute('style','margin-left:1em;width:13ex');
   
-  function setInputToTime(whichInput, timeVal) {
+  function setInputToTime(inputKey, timeVal) {
     if (dictTimeEntryRows.hasOwnProperty(whichInput)) {
       switch(timeVal) {
         case "now":
-          $j(`tr:contains(${dictTimeEntryRows[whichInput]}) input.timeEntry`).timeEntry('setTime', new Date());
+          $j(`tr:contains(${dictTimeEntryRows[inputKey]}) input.timeEntry`).timeEntry('setTime', new Date());
           break;
         case "daystart":
-          $j(`tr:contains(${dictTimeEntryRows[whichInput]}) input.timeEntry`).timeEntry('setTime', new Date(0, 0, 0, arrDailyTimes[0].dtid_HH, arrDailyTimes[0].dtid_MI));
+          $j(`tr:contains(${dictTimeEntryRows[inputKey]}) input.timeEntry`).timeEntry('setTime', new Date(0, 0, 0, arrDailyTimes[0].dtid_HH, arrDailyTimes[0].dtid_MI));
           break;
         case "dayend":
-          $j(`tr:contains(${dictTimeEntryRows[whichInput]}) input.timeEntry`).timeEntry('setTime', new Date(0, 0, 0, arrDailyTimes[0].dtod_HH, arrDailyTimes[0].dtod_MI));
+          $j(`tr:contains(${dictTimeEntryRows[inputKey]}) input.timeEntry`).timeEntry('setTime', new Date(0, 0, 0, arrDailyTimes[0].dtod_HH, arrDailyTimes[0].dtod_MI));
           break;
       }
+      // focus the cursor on the associated inputbox
+      $j(`tr:contains(${dictTimeEntryRows[inputKey]}) input.timeEntry`).focus()
     }
   }
 
