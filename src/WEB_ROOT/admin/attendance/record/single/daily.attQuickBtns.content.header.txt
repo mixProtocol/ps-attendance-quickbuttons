@@ -54,20 +54,21 @@
   btnButtonTemplate.setAttribute('style','margin-left:1em;width:13ex');
   
   function setInputToTime(inputKey, timeVal) {
-    if (dictTimeEntryRows.hasOwnProperty(whichInput)) {
+    if (dictTimeEntryRows.hasOwnProperty(inputKey)) {
+      var elInputTime = $j(`tr:contains(${dictTimeEntryRows[inputKey]}) input.timeEntry`);
       switch(timeVal) {
         case "now":
-          $j(`tr:contains(${dictTimeEntryRows[inputKey]}) input.timeEntry`).timeEntry('setTime', new Date());
+          $j(elInputTime).timeEntry('setTime', new Date());
           break;
         case "daystart":
-          $j(`tr:contains(${dictTimeEntryRows[inputKey]}) input.timeEntry`).timeEntry('setTime', new Date(0, 0, 0, arrDailyTimes[0].dtid_HH, arrDailyTimes[0].dtid_MI));
+          $j(elInputTime).timeEntry('setTime', new Date(0, 0, 0, arrDailyTimes[0].dtid_HH, arrDailyTimes[0].dtid_MI));
           break;
         case "dayend":
-          $j(`tr:contains(${dictTimeEntryRows[inputKey]}) input.timeEntry`).timeEntry('setTime', new Date(0, 0, 0, arrDailyTimes[0].dtod_HH, arrDailyTimes[0].dtod_MI));
+          $j(elInputTime).timeEntry('setTime', new Date(0, 0, 0, arrDailyTimes[0].dtod_HH, arrDailyTimes[0].dtod_MI));
           break;
       }
       // focus the cursor on the associated inputbox
-      $j(`tr:contains(${dictTimeEntryRows[inputKey]}) input.timeEntry`).focus()
+      $j(elInputTime).focus()
     }
   }
 
