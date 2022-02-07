@@ -1,6 +1,9 @@
 <script type="text/javascript">
+(function attQuickBtnsPlugin() {
   var dictTimeEntryRows  = {
     "in":  "~[text:psx.html.admin_attendance_record_single.ATTtime.clock_in]",   // Clock In
     "out": "~[text:psx.html.admin_attendance_record_single.ATTtime.clock_out]"   // Clock Out
   };
+
+})();
 </script>
