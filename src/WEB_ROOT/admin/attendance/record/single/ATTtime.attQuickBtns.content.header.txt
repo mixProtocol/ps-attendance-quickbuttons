@@ -5,5 +5,97 @@
     "out": "~[text:psx.html.admin_attendance_record_single.ATTtime.clock_out]"   // Clock Out
   };
 
+  var arrDailyTimes = new Array();
+  arrDailyTimes.push(  /* ~[tlist_sql;
+    SELECT
+      JSON_OBJECT (
+        'date_val' VALUE TO_CHAR(cald.Date_Value, 'YYYY-MM-DD'), 
+        'dtid_HH' VALUE TO_CHAR(to_date(bsi.Daily_Time_In_Default,'sssss'), 'HH24'),
+        'dtid_MI' VALUE TO_CHAR(to_date(bsi.Daily_Time_In_Default,'sssss'), 'MI'),
+        'dtod_HH' VALUE TO_CHAR(to_date(bsi.Daily_Time_Out_Default,'sssss'), 'HH24'),
+        'dtod_MI' VALUE TO_CHAR(to_date(bsi.Daily_Time_Out_Default,'sssss'), 'MI')
+      )
+    FROM Calendar_Day cald
+    JOIN Cycle_Day cycd
+      ON cald.Cycle_Day_Id = cycd.Id
+    JOIN Bell_Schedule_Items bsi
+      ON cald.Bell_Schedule_Id = bsi.Bell_Schedule_Id
+    JOIN Period prd
+      ON bsi.Period_Id = prd.Id
+    AND cald.SchoolId = prd.SchoolId  
+    
+    WHERE cald.Date_Value = to_date('~(gpv.attendance_date;sqlText)', 'MM/DD/YYYY')
+      AND cald.SchoolId = ~(curschoolid)
+      AND bsi.Daily_Attendance_Code = 1
+    ORDER BY cald.Date_Value
+    ]*/
+    ~(jsonObj),
+    /*[/tlist_sql]*/{});
+
+  // Remove the last object from the array, if it's empty
+  if ($j.isEmptyObject(arrDailyTimes[arrDailyTimes.length-1])) {
+      arrDailyTimes.pop();
+  }
+
+  // using a cloneable template as changing the 'type' attribute of a button causes issues on IE
+  var btnButtonTemplate = document.createRange().createContextualFragment('<button type="button" class="attQuickButton"></button>').firstElementChild;
+  btnButtonTemplate.setAttribute('class','attqckbttns');
+  // TODO: Set button width based on the max length of their labels
+  btnButtonTemplate.setAttribute('style','margin-left:1em;width:13ex');
+  
+  function setInputToTime(inputKey, timeVal) {
+    if (dictTimeEntryRows.hasOwnProperty(inputKey)) {
+      var elInputTime = $j(`tr:contains(${dictTimeEntryRows[inputKey]}) input.timeEntry`);
+      switch(timeVal) {
+        case "now":
+          $j(elInputTime).timeEntry('setTime', new Date());
+          break;
+        case "daystart":
+          $j(elInputTime).timeEntry('setTime', new Date(0, 0, 0, arrDailyTimes[0].dtid_HH, arrDailyTimes[0].dtid_MI));
+          break;
+        case "dayend":
+          $j(elInputTime).timeEntry('setTime', new Date(0, 0, 0, arrDailyTimes[0].dtod_HH, arrDailyTimes[0].dtod_MI));
+          break;
+      }
+      // focus the cursor on the associated inputbox
+      $j(elInputTime).focus()
+    }
+  }
+
+  var btnTimeIn_Current = btnButtonTemplate.cloneNode();
+  btnTimeIn_Current.innerText = "Current Time";
+  btnTimeIn_Current.onclick = function() {setInputToTime("in", "now")};
+  
+  var btnTimeOut_Current = btnButtonTemplate.cloneNode();
+  btnTimeOut_Current.innerText = "Current Time";
+  btnTimeOut_Current.onclick = function() {setInputToTime("out", "now")};
+  
+  var btnTimeIn_DayStart = btnButtonTemplate.cloneNode();
+  btnTimeIn_DayStart.innerText = "Start of Day";
+  btnTimeIn_DayStart.onclick = function() {setInputToTime("in", "daystart")};
+  
+  var btnTimeIn_DayEnd = btnButtonTemplate.cloneNode();
+  btnTimeIn_DayEnd.innerText = "End of Day";
+  btnTimeIn_DayEnd.onclick = function() {setInputToTime("out", "dayend")};
+
+  var fragQckBtnsRow_In = document.createDocumentFragment();
+  fragQckBtnsRow_In.appendChild(document.createElement("span"));
+  fragQckBtnsRow_In.firstElementChild.setAttribute('class','qckbttns-row');
+  fragQckBtnsRow_In.firstElementChild.appendChild(btnTimeIn_Current);
+  fragQckBtnsRow_In.firstElementChild.appendChild(btnTimeIn_DayStart);
+  
+  var fragQckBtnsRow_Out = document.createDocumentFragment();
+  fragQckBtnsRow_Out.appendChild(document.createElement("span"));
+  fragQckBtnsRow_Out.firstElementChild.setAttribute('class','qckbttns-row');
+  fragQckBtnsRow_Out.firstElementChild.appendChild(btnTimeOut_Current);
+  fragQckBtnsRow_Out.firstElementChild.appendChild(btnTimeIn_DayEnd);
+  
+  $j( document ).ready(function() {
+    $j(`tr:contains(${dictTimeEntryRows['in']}) td:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
+    $j(`tr:contains(${dictTimeEntryRows['out']}) td:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
+    $j(`tr:contains(${dictTimeEntryRows['in']}) td:has(input.timeEntry)`).contents().last().append(fragQckBtnsRow_In);
+    $j(`tr:contains(${dictTimeEntryRows['out']}) td:has(input.timeEntry)`).contents().last().append(fragQckBtnsRow_Out);
+  });
+
 })();
 </script>
