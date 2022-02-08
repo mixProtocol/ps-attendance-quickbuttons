@@ -104,8 +104,6 @@
   fragQckBtnsRow_Out.firstElementChild.appendChild(btnTimeOut_Current);
   fragQckBtnsRow_Out.firstElementChild.appendChild(btnTimeIn_DayEnd);
 
-
-  
   $j( document ).ready(function() {
     $j(`tr:contains(${dictTimeEntryRows['in']}) td:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
     $j(`tr:contains(${dictTimeEntryRows['out']}) td:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
