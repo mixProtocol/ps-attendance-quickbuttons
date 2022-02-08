@@ -23,7 +23,7 @@
       ON cald.Bell_Schedule_Id = bsi.Bell_Schedule_Id
     JOIN Period prd
       ON bsi.Period_Id = prd.Id
-    AND cald.SchoolId = prd.SchoolId  
+     AND cald.SchoolId = prd.SchoolId  
     
     WHERE cald.Date_Value = to_date('~(gpv.attendance_date;sqlText)', 'MM/DD/YYYY')
       AND cald.SchoolId = ~(curschoolid)
@@ -78,6 +78,20 @@
   var btnTimeIn_DayEnd = btnButtonTemplate.cloneNode();
   btnTimeIn_DayEnd.innerText = "End of Day";
   btnTimeIn_DayEnd.onclick = function() {setInputToTime("out", "dayend")};
+  
+  // Disable the Start/End_of_Day buttons if any of the following is true
+  //  - arrDailyTimes is an empty array
+  //  - arrDailyTimes[0] is an empty object
+  //  - arrDailyTimes[0].dtid_HH, .dtid_MI, .dtod_HH, or .dtod_MI are empty keys
+  if ( (arrDailyTimes.length == 0) ||
+       ($j.isEmptyObject(arrDailyTimes[0])) ||
+       (arrDailyTimes[0].dtid_HH == "") ||
+       (arrDailyTimes[0].dtid_MI == "") ||
+       (arrDailyTimes[0].dtod_MI == "") ||
+       (arrDailyTimes[0].dtod_MI == "") ) {
+    btnTimeIn_DayStart.disabled = "true";
+    btnTimeIn_DayEnd.disabled = "true" ;
+  }
 
   var fragQckBtnsRow_In = document.createDocumentFragment();
   fragQckBtnsRow_In.appendChild(document.createElement("span"));
