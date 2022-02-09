@@ -1,0 +1,40 @@
+<script type="text/javascript">
+  // Use a MutationObserver to watch for div#psDialog > div#dailyClockInOutDialogTemplate
+  // and then add the "Now" and "Start/End of Day" buttons to the ClockIn and ClockOut
+  // input boxes within the contained form#dailydayform > fieldset
+
+  // Select the node that will be observed for mutations.
+  var moTargetNode = document.body;
+
+  // Options for the observer (which mutations to observe)
+  var moOpts = { attributes: false, childList: true, subtree: true };
+
+  var selDailyFrmFldst = "div#dailyClockInOutDialogTemplate form#dailydayform fieldset";
+
+  var dictTimeEntryRows  = {
+    "in":  "~[text:psx.html.admin_attendance_record_single.daily.clock_in]",   // Clock In
+    "out": "~[text:psx.html.admin_attendance_record_single.daily.clock_out]"   // Clock Out
+  };
+
+  // Callback function to execute when mutations are observed
+  var moCallback = function(mutationsList, bodyObsrvr) {
+    for (var i = 0; i < mutationsList.length; i++) {
+      var mut = mutationsList[i];
+      if (mut.type === 'childList') {
+        for (var m of mut.addedNodes) {  // TODO: For IE, eliminate use of for...of 
+          // console.log(`${m} -- ${m.id} -- ${typeof(m)} -- ${m.className} -- ${m.data} -- ${m.innerHtml}`);
+          if (m.id === "clockInOutTemplate") {
+            elDailyFrmFldst =$j(`${selDailyFrmFldst} div:has(label:contains('Clock In')) span:has(input.timeEntry)`);
+          }
+        }
+      }
+    }
+  }
+
+// Create an observer instance linked to the callback function
+var bodyObsrvr = new MutationObserver(moCallback);
+
+// Start observing the target node for configured mutations
+bodyObsrvr.observe(moTargetNode, moOpts);
+
+</script>
