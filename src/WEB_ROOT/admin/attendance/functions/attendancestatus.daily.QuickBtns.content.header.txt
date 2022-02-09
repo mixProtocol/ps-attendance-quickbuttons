@@ -12,8 +12,8 @@
   var selDailyFrmFldst = "div#dailyClockInOutDialogTemplate form#dailydayform fieldset";
 
   var dictTimeEntryRows  = {
-    "in":  "~[text:psx.html.admin_attendance_record_single.daily.clock_in]",   // Clock In
-    "out": "~[text:psx.html.admin_attendance_record_single.daily.clock_out]"   // Clock Out
+    "in":  "~[text:psx.jshtml.admin_students.attendance_clockinout.clock_in]",   // Clock In
+    "out": "~[text:psx.jshtml.admin_students.attendance_clockinout.clock_out]"   // Clock Out
   };
 
   // Callback function to execute when mutations are observed
