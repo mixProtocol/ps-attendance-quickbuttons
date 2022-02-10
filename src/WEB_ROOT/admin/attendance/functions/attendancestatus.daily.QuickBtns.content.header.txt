@@ -16,25 +16,82 @@
     "out": "~[text:psx.jshtml.admin_students.attendance_clockinout.clock_out]"   // Clock Out
   };
 
-  // Callback function to execute when mutations are observed
-  var moCallback = function(mutationsList, bodyObsrvr) {
-    for (var i = 0; i < mutationsList.length; i++) {
-      var mut = mutationsList[i];
-      if (mut.type === 'childList') {
-        for (var m of mut.addedNodes) {  // TODO: For IE, eliminate use of for...of 
-          // console.log(`${m} -- ${m.id} -- ${typeof(m)} -- ${m.className} -- ${m.data} -- ${m.innerHtml}`);
-          if (m.id === "clockInOutTemplate") {
-            elDailyFrmFldst =$j(`${selDailyFrmFldst} div:has(label:contains('Clock In')) span:has(input.timeEntry)`);
-          }
+  
+  // using a cloneable template as changing the 'type' attribute of a button causes issues on IE
+  var btnButtonTemplate = document.createRange().createContextualFragment('<button type="button" class="attQuickButton"></button>').firstElementChild;
+  btnButtonTemplate.setAttribute('class','attqckbttns');
+  // TODO: Set button width based on the max length of their labels
+
+  btnButtonTemplate.setAttribute('style','margin-left:1em;width:13ex');
+  var btnTimeIn_Current = btnButtonTemplate.cloneNode();
+  btnTimeIn_Current.innerText = "Current Time";
+  // btnTimeIn_Current.onclick = function() {setInputToTime("in", "now")};
+  
+  var btnTimeOut_Current = btnButtonTemplate.cloneNode();
+  btnTimeOut_Current.innerText = "Current Time";
+  // btnTimeOut_Current.onclick = function() {setInputToTime("out", "now")};
+  
+  var btnTimeIn_DayStart = btnButtonTemplate.cloneNode();
+  btnTimeIn_DayStart.innerText = "Start of Day";
+  // btnTimeIn_DayStart.onclick = function() {setInputToTime("in", "daystart")};
+  
+  var btnTimeIn_DayEnd = btnButtonTemplate.cloneNode();
+  btnTimeIn_DayEnd.innerText = "End of Day";
+  // btnTimeIn_DayEnd.onclick = function() {setInputToTime("out", "dayend")};
+  
+  var fragQckBtnsRow_In = document.createDocumentFragment();
+  fragQckBtnsRow_In.appendChild(document.createElement("span"));
+  fragQckBtnsRow_In.firstElementChild.setAttribute('class','qckbttns-row');
+  fragQckBtnsRow_In.firstElementChild.appendChild(btnTimeIn_Current);
+  fragQckBtnsRow_In.firstElementChild.appendChild(btnTimeIn_DayStart);
+  
+  var fragQckBtnsRow_Out = document.createDocumentFragment();
+  fragQckBtnsRow_Out.appendChild(document.createElement("span"));
+  fragQckBtnsRow_Out.firstElementChild.setAttribute('class','qckbttns-row');
+  fragQckBtnsRow_Out.firstElementChild.appendChild(btnTimeOut_Current);
+  fragQckBtnsRow_Out.firstElementChild.appendChild(btnTimeIn_DayEnd);
+
+// Callback function to execute when mutations are observed
+var moCallback = function(mutationsList, bodyObsrvr) {
+  /*
+  for (var i = 0; i < mutationsList.length; i++) {
+    var mut = mutationsList[i];
+    if (mut.type === 'childList') {
+      for (var m of mut.addedNodes) {  // TODO: For IE, eliminate use of for...of 
+        console.log(`${m} -- ${m.id} -- ${typeof(m)} -- ${m.className} -- ${m.data} -- ${m.innerHtml}`);
+        if (m.id === "clockInOutTemplate") {
+          $j(document).ready(function(){
+            console.log ($j(`${selDailyFrmFldst} div:has(label:contains('Clock In')) span:has(input.timeEntry)`));
+          });
+
+          $j(`${selDailyFrmFldst} div:has(label:contains('Clock In')) span:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
+          $j(`${selDailyFrmFldst} div:has(label:contains('Clock Out')) span:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
+          $j(`${selDailyFrmFldst} div:has(label:contains('Clock In')) span:has(input.timeEntry)`).contents().last().after(fragQckBtnsRow_In);
+          $j(`${selDailyFrmFldst} div:has(label:contains('Clock Out')) span:has(input.timeEntry)`).contents().last().after(fragQckBtnsRow_Out);
         }
       }
     }
   }
+  */
+}
 
-  // Create an observer instance linked to the callback function
-  var bodyObsrvr = new MutationObserver(moCallback);
+// By the time the clockInOutButton is rendered to the page, the dailyClockInOutDialogTemplate
+// has been fully loaded (hidden) in the drawerPane.  Set a delegated event handler for the
+// button to add the timeEntry buttons to the template.
+// TODO:  Check that the attTimeQuickButtons don't exist before adding them (to avoid duplicates)
 
-  // Start observing the target node for configured mutations
-  bodyObsrvr.observe(moTargetNode, moOpts);
+$j("body").on( "click", "button[name='clockInOutButton']", function( event ) {
+  alert("event triggered");
+  $j(`${selDailyFrmFldst} div:has(label:contains('Clock In')) span:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
+  $j(`${selDailyFrmFldst} div:has(label:contains('Clock Out')) span:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
+  $j(`${selDailyFrmFldst} div:has(label:contains('Clock In')) span:has(input.timeEntry)`).contents().last().after(fragQckBtnsRow_In);
+  $j(`${selDailyFrmFldst} div:has(label:contains('Clock Out')) span:has(input.timeEntry)`).contents().last().after(fragQckBtnsRow_Out);
+});
+
+// Create an observer instance linked to the callback function
+var bodyObsrvr = new MutationObserver(moCallback);
+
+// Start observing the target node for configured mutations
+bodyObsrvr.observe(moTargetNode, moOpts);
 
 </script>
