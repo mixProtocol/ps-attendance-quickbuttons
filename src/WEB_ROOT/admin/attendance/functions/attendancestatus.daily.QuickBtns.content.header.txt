@@ -31,10 +31,10 @@
     }
   }
 
-// Create an observer instance linked to the callback function
-var bodyObsrvr = new MutationObserver(moCallback);
+  // Create an observer instance linked to the callback function
+  var bodyObsrvr = new MutationObserver(moCallback);
 
-// Start observing the target node for configured mutations
-bodyObsrvr.observe(moTargetNode, moOpts);
+  // Start observing the target node for configured mutations
+  bodyObsrvr.observe(moTargetNode, moOpts);
 
 </script>
