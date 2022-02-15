@@ -8,7 +8,57 @@
     "in":  "~[text:psx.jshtml.admin_students.attendance_clockinout.clock_in]",   // Clock In
     "out": "~[text:psx.jshtml.admin_students.attendance_clockinout.clock_out]"   // Clock Out
   };
-  
+
+  var arrDailyTimes = new Array();
+  arrDailyTimes.push(  /* ~[tlist_sql;
+    SELECT
+      JSON_OBJECT (
+        'date_val' VALUE TO_CHAR(cald.Date_Value, 'YYYY-MM-DD'), 
+        'dtid_HH' VALUE TO_CHAR(to_date(bsi.Daily_Time_In_Default,'sssss'), 'HH24'),
+        'dtid_MI' VALUE TO_CHAR(to_date(bsi.Daily_Time_In_Default,'sssss'), 'MI'),
+        'dtod_HH' VALUE TO_CHAR(to_date(bsi.Daily_Time_Out_Default,'sssss'), 'HH24'),
+        'dtod_MI' VALUE TO_CHAR(to_date(bsi.Daily_Time_Out_Default,'sssss'), 'MI')
+      )
+    FROM Calendar_Day cald
+    JOIN Cycle_Day cycd
+      ON cald.Cycle_Day_Id = cycd.Id
+    JOIN Bell_Schedule_Items bsi
+      ON cald.Bell_Schedule_Id = bsi.Bell_Schedule_Id
+    JOIN Period prd
+      ON bsi.Period_Id = prd.Id
+     AND cald.SchoolId = prd.SchoolId  
+    
+    WHERE cald.Date_Value = to_date('~(gpv.attendance_date;sqlText)', 'MM/DD/YYYY')
+      AND cald.SchoolId = ~(curschoolid)
+      AND bsi.Daily_Attendance_Code = 1
+    ORDER BY cald.Date_Value
+    ]*/
+    ~(jsonObj),
+    /*[/tlist_sql]*/{});
+
+  // Remove the last object from the array, if it's empty
+  if ($j.isEmptyObject(arrDailyTimes[arrDailyTimes.length-1])) {
+      arrDailyTimes.pop();
+  }
+
+  function setInputToTime(inputKey, timeVal) {
+    if (dictTimeEntryRows.hasOwnProperty(inputKey)) {
+      var elInputTime = $j(`tr:contains(${dictTimeEntryRows[inputKey]}) input.timeEntry`);
+      switch(timeVal) {
+        case "now":
+          $j(elInputTime).timeEntry('setTime', new Date());
+          break;
+        case "daystart":
+          $j(elInputTime).timeEntry('setTime', new Date(0, 0, 0, arrDailyTimes[0].dtid_HH, arrDailyTimes[0].dtid_MI));
+          break;
+        case "dayend":
+          $j(elInputTime).timeEntry('setTime', new Date(0, 0, 0, arrDailyTimes[0].dtod_HH, arrDailyTimes[0].dtod_MI));
+          break;
+      }
+      // focus the cursor on the associated inputbox
+      $j(elInputTime).focus()
+    }
+  }
   // using a cloneable template as changing the 'type' attribute of a button causes issues on IE
   var btnButtonTemplate = document.createRange().createContextualFragment('<button type="button"></button>').firstElementChild;
   btnButtonTemplate.setAttribute('class','attqckbttns');
@@ -18,7 +68,7 @@
   // has been fully loaded (hidden) in the drawerPane.  Set a delegated event handler for the
   // button to add the timeEntry buttons to the template.
   $j("body").on( "click", "button[name='clockInOutButton']", function( event ) {
-    alert("event triggered");
+    //alert("event triggered");
  
     // add the buttons if they're not already there
     if ($j(`${selDailyFrmFldst} .qckbttns-row`).length === 0) {
@@ -26,20 +76,20 @@
       var btnTimeIn_Current = btnButtonTemplate.cloneNode();
       $j(btnTimeIn_Current).css('margin-left','1em');
       btnTimeIn_Current.innerText = "Current Time";
-      // btnTimeIn_Current.onclick = function() {setInputToTime("in", "now")};
+      btnTimeIn_Current.onclick = function() {setInputToTime("in", "now")};
       
       var btnTimeOut_Current = btnButtonTemplate.cloneNode();
       $j(btnTimeOut_Current).css('margin-left','1em');
       btnTimeOut_Current.innerText = "Current Time";
-      // btnTimeOut_Current.onclick = function() {setInputToTime("out", "now")};
+      btnTimeOut_Current.onclick = function() {setInputToTime("out", "now")};
       
       var btnTimeIn_DayStart = btnButtonTemplate.cloneNode();
       btnTimeIn_DayStart.innerText = "Start of Day";
-      // btnTimeIn_DayStart.onclick = function() {setInputToTime("in", "daystart")};
+      btnTimeIn_DayStart.onclick = function() {setInputToTime("in", "daystart")};
       
       var btnTimeIn_DayEnd = btnButtonTemplate.cloneNode();
       btnTimeIn_DayEnd.innerText = "End of Day";
-      // btnTimeIn_DayEnd.onclick = function() {setInputToTime("out", "dayend")};
+      btnTimeIn_DayEnd.onclick = function() {setInputToTime("out", "dayend")};
       
       var fragQckBtnsRow_In = document.createDocumentFragment();
       fragQckBtnsRow_In.appendChild(document.createElement("span"));
@@ -57,10 +107,10 @@
       $j(`${selDailyFrmFldst} label`).css('width','27%');
 
       // remove the example text from right of the input boxes
-      $j(`${selDailyFrmFldst} div:has(label:contains('Clock In')) span:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
-      $j(`${selDailyFrmFldst} div:has(label:contains('Clock Out')) span:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
-      $j(`${selDailyFrmFldst} div:has(label:contains('Clock In')) span:has(input.timeEntry)`).contents().last().after(fragQckBtnsRow_In);
-      $j(`${selDailyFrmFldst} div:has(label:contains('Clock Out')) span:has(input.timeEntry)`).contents().last().after(fragQckBtnsRow_Out);
+      $j(`${selDailyFrmFldst} div:has(label:contains(${dictTimeEntryRows['in']})) span:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
+      $j(`${selDailyFrmFldst} div:has(label:contains(${dictTimeEntryRows['out']})) span:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
+      $j(`${selDailyFrmFldst} div:has(label:contains(${dictTimeEntryRows['in']})) span:has(input.timeEntry)`).contents().last().after(fragQckBtnsRow_In);
+      $j(`${selDailyFrmFldst} div:has(label:contains(${dictTimeEntryRows['out']})) span:has(input.timeEntry)`).contents().last().after(fragQckBtnsRow_Out);
     }
   });
 </script>
