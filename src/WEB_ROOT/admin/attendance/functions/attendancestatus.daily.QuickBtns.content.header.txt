@@ -53,30 +53,6 @@
   fragQckBtnsRow_Out.firstElementChild.appendChild(btnTimeOut_Current);
   fragQckBtnsRow_Out.firstElementChild.appendChild(btnTimeIn_DayEnd);
 
-// Callback function to execute when mutations are observed
-var moCallback = function(mutationsList, bodyObsrvr) {
-  /*
-  for (var i = 0; i < mutationsList.length; i++) {
-    var mut = mutationsList[i];
-    if (mut.type === 'childList') {
-      for (var m of mut.addedNodes) {  // TODO: For IE, eliminate use of for...of 
-        console.log(`${m} -- ${m.id} -- ${typeof(m)} -- ${m.className} -- ${m.data} -- ${m.innerHtml}`);
-        if (m.id === "clockInOutTemplate") {
-          $j(document).ready(function(){
-            console.log ($j(`${selDailyFrmFldst} div:has(label:contains('Clock In')) span:has(input.timeEntry)`));
-          });
-
-          $j(`${selDailyFrmFldst} div:has(label:contains('Clock In')) span:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
-          $j(`${selDailyFrmFldst} div:has(label:contains('Clock Out')) span:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
-          $j(`${selDailyFrmFldst} div:has(label:contains('Clock In')) span:has(input.timeEntry)`).contents().last().after(fragQckBtnsRow_In);
-          $j(`${selDailyFrmFldst} div:has(label:contains('Clock Out')) span:has(input.timeEntry)`).contents().last().after(fragQckBtnsRow_Out);
-        }
-      }
-    }
-  }
-  */
-}
-
 // By the time the clockInOutButton is rendered to the page, the dailyClockInOutDialogTemplate
 // has been fully loaded (hidden) in the drawerPane.  Set a delegated event handler for the
 // button to add the timeEntry buttons to the template.
@@ -93,11 +69,5 @@ $j("body").on( "click", "button[name='clockInOutButton']", function( event ) {
   $j(`${selDailyFrmFldst} div:has(label:contains('Clock In')) span:has(input.timeEntry)`).contents().last().after(fragQckBtnsRow_In);
   $j(`${selDailyFrmFldst} div:has(label:contains('Clock Out')) span:has(input.timeEntry)`).contents().last().after(fragQckBtnsRow_Out);
 });
-
-// Create an observer instance linked to the callback function
-var bodyObsrvr = new MutationObserver(moCallback);
-
-// Start observing the target node for configured mutations
-bodyObsrvr.observe(moTargetNode, moOpts);
 
 </script>
