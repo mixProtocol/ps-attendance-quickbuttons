@@ -1,13 +1,6 @@
 <script type="text/javascript">
-  // Use a MutationObserver to watch for div#psDialog > div#dailyClockInOutDialogTemplate
-  // and then add the "Now" and "Start/End of Day" buttons to the ClockIn and ClockOut
+  // add the "Now" and "Start/End of Day" buttons to the ClockIn and ClockOut
   // input boxes within the contained form#dailydayform > fieldset
-
-  // Select the node that will be observed for mutations.
-  var moTargetNode = document.body;
-
-  // Options for the observer (which mutations to observe)
-  var moOpts = { attributes: false, childList: true, subtree: true };
 
   var selDailyFrmFldst = "div#dailyClockInOutDialogTemplate form#dailydayform fieldset";
 
@@ -20,8 +13,7 @@
   var btnButtonTemplate = document.createRange().createContextualFragment('<button type="button"></button>').firstElementChild;
   btnButtonTemplate.setAttribute('class','attqckbttns');
   $j(btnButtonTemplate).css('width','13ex');   // TODO: Set button width based on the max length of their labels
-
- // btnButtonTemplate.setAttribute('style','margin-left:1em;width:13ex;');
+  
   var btnTimeIn_Current = btnButtonTemplate.cloneNode();
   $j(btnTimeIn_Current).css('margin-left','1em');
   btnTimeIn_Current.innerText = "Current Time";
