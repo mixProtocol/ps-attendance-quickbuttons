@@ -15,19 +15,20 @@
     "in":  "~[text:psx.jshtml.admin_students.attendance_clockinout.clock_in]",   // Clock In
     "out": "~[text:psx.jshtml.admin_students.attendance_clockinout.clock_out]"   // Clock Out
   };
-
   
   // using a cloneable template as changing the 'type' attribute of a button causes issues on IE
-  var btnButtonTemplate = document.createRange().createContextualFragment('<button type="button" class="attQuickButton"></button>').firstElementChild;
+  var btnButtonTemplate = document.createRange().createContextualFragment('<button type="button"></button>').firstElementChild;
   btnButtonTemplate.setAttribute('class','attqckbttns');
-  // TODO: Set button width based on the max length of their labels
+  $j(btnButtonTemplate).css('width','13ex');   // TODO: Set button width based on the max length of their labels
 
-  btnButtonTemplate.setAttribute('style','margin-left:1em;width:13ex');
+ // btnButtonTemplate.setAttribute('style','margin-left:1em;width:13ex;');
   var btnTimeIn_Current = btnButtonTemplate.cloneNode();
+  $j(btnTimeIn_Current).css('margin-left','1em');
   btnTimeIn_Current.innerText = "Current Time";
   // btnTimeIn_Current.onclick = function() {setInputToTime("in", "now")};
   
   var btnTimeOut_Current = btnButtonTemplate.cloneNode();
+  $j(btnTimeOut_Current).css('margin-left','1em');
   btnTimeOut_Current.innerText = "Current Time";
   // btnTimeOut_Current.onclick = function() {setInputToTime("out", "now")};
   
@@ -42,6 +43,7 @@
   var fragQckBtnsRow_In = document.createDocumentFragment();
   fragQckBtnsRow_In.appendChild(document.createElement("span"));
   fragQckBtnsRow_In.firstElementChild.setAttribute('class','qckbttns-row');
+  //fragQckBtnsRow_In.firstElementChild.setAttribute('style','font-size:smaller;');
   fragQckBtnsRow_In.firstElementChild.appendChild(btnTimeIn_Current);
   fragQckBtnsRow_In.firstElementChild.appendChild(btnTimeIn_DayStart);
   
@@ -82,6 +84,10 @@ var moCallback = function(mutationsList, bodyObsrvr) {
 
 $j("body").on( "click", "button[name='clockInOutButton']", function( event ) {
   alert("event triggered");
+  // reduce with of labels to 27% (stock is 35%) to make room for buttons
+  $j(`${selDailyFrmFldst} label`).css('width','27%');
+
+  // remove the example text from right of the input boxes
   $j(`${selDailyFrmFldst} div:has(label:contains('Clock In')) span:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
   $j(`${selDailyFrmFldst} div:has(label:contains('Clock Out')) span:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
   $j(`${selDailyFrmFldst} div:has(label:contains('Clock In')) span:has(input.timeEntry)`).contents().last().after(fragQckBtnsRow_In);
