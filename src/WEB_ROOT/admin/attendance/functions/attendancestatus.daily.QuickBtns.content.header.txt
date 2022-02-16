@@ -1,4 +1,5 @@
 <script type="text/javascript">
+(function attQuickBtnsPlugin() {
   // add the "Now" and "Start/End of Day" buttons to the ClockIn and ClockOut
   // input boxes within the contained form#dailydayform > fieldset
 
@@ -16,29 +17,33 @@
   // the TList_SQL need to be in seperate JSON file queried via AJAX after
   // scraping the date with jQuery
   function updateDailyTimesForDate(att_date) {
-    $j.ajax({
-      type: 'POST', 
-      dataType: 'json',
-      cache: 'false',
-      url: '/admin/attendance/functions/attendancestatus.daily.QuickBtns.json', 
-      data: {
-        "attendance_date" : att_date
-      },
-      // TODO: refactor success as done
-      success: function(data) {
-        if (data.length > 0) {
-          arrDailyTimes = data;
-          // Remove the last object from the array, if it's empty
-          if ($j.isEmptyObject(arrDailyTimes[arrDailyTimes.length-1])) {
+    // if att_date is can be parsed as a Date value, then
+    // update arrDailyTimes for that date
+    if (Date.parse(att_date)) {
+        $j.ajax({
+          type: 'POST', 
+          dataType: 'json',
+          cache: 'false',
+        url: '/admin/attendance/functions/attendancestatus.daily.QuickBtns.json', 
+        data: {
+          "attendance_date" : att_date
+        },
+        // TODO: refactor success as done
+        success: function(data) {
+          if (data.length > 0) {
+            arrDailyTimes = data;
+            // Remove the last object from the array, if it's empty
+            if ($j.isEmptyObject(arrDailyTimes[arrDailyTimes.length-1])) {
               arrDailyTimes.pop();
+            }
           }
+        },
+        // TODO: refactor error as fail
+        error: function() {
+          // 'JSON error'  
         }
-      },
-      // TODO: refactor error as fail
-      error: function() {
-        // 'JSON error'  
-      }
-    });
+      });
+    }
   }
 
   function setInputToTime(inputKey, timeVal) {
@@ -124,4 +129,5 @@
       $j(`${selDailyFrmFldst} div:has(label:contains(${dictTimeEntryRows['out']})) span:has(input.timeEntry)`).contents().last().after(fragQckBtnsRow_Out);
     }
   });
+})();
 </script>
