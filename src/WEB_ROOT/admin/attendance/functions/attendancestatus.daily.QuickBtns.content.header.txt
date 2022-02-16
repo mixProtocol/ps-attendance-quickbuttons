@@ -40,6 +40,26 @@
     ~(jsonObj),
     /*[/tlist_sql]*/{});
 
+    $j.ajax({
+      type: 'POST', 
+      dataType: 'json',
+      cache: 'false',
+      url: '/admin/attendance/functions/attendancestatus.daily.QuickBtns.json', 
+      data: {
+        "attendance_date" : "2/15/2022"
+     },
+      // TODO: refactor success as done
+      success: function(data) {
+        for (i=0; i<data.length; i++){
+          // 
+        }
+      },
+      // TODO: refactor error as fail
+      error: function() {
+        // 'JSON error'  
+      }
+    });
+
   // Remove the last object from the array, if it's empty
   if ($j.isEmptyObject(arrDailyTimes[arrDailyTimes.length-1])) {
       arrDailyTimes.pop();
