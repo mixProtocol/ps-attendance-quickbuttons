@@ -12,33 +12,34 @@
   };
 
   var arrDailyTimes = new Array();
-  // There's no GPV'able attendance_date value available on this page.
-  // TODO: Move the TList_SQL to a seperate JSON file and pass the date as an
-  //        argument in the AJAX call.
-
-  $j.ajax({
-    type: 'POST', 
-    dataType: 'json',
-    cache: 'false',
-    url: '/admin/attendance/functions/attendancestatus.daily.QuickBtns.json', 
-    data: {
-      "attendance_date" : $j("input#attendanceDateId").val()
-    },
-    // TODO: refactor success as done
-    success: function(data) {
-      if (data.length > 0) {
-        arrDailyTimes = data;
-        // Remove the last object from the array, if it's empty
-        if ($j.isEmptyObject(arrDailyTimes[arrDailyTimes.length-1])) {
-            arrDailyTimes.pop();
+  // There's no GPV'able attendance_date value available on this page so
+  // the TList_SQL need to be in seperate JSON file queried via AJAX after
+  // scraping the date with jQuery
+  function updateDailyTimesForDate(att_date) {
+    $j.ajax({
+      type: 'POST', 
+      dataType: 'json',
+      cache: 'false',
+      url: '/admin/attendance/functions/attendancestatus.daily.QuickBtns.json', 
+      data: {
+        "attendance_date" : att_date
+      },
+      // TODO: refactor success as done
+      success: function(data) {
+        if (data.length > 0) {
+          arrDailyTimes = data;
+          // Remove the last object from the array, if it's empty
+          if ($j.isEmptyObject(arrDailyTimes[arrDailyTimes.length-1])) {
+              arrDailyTimes.pop();
+          }
         }
+      },
+      // TODO: refactor error as fail
+      error: function() {
+        // 'JSON error'  
       }
-    },
-    // TODO: refactor error as fail
-    error: function() {
-      // 'JSON error'  
-    }
-  });
+    });
+  }
 
   function setInputToTime(inputKey, timeVal) {
     if (dictTimeEntryRows.hasOwnProperty(inputKey)) {
@@ -68,6 +69,17 @@
   // button to add the timeEntry buttons to the template.
   $j("body").on( "click", "button[name='clockInOutButton']", function( event ) {
     //alert("event triggered");
+
+    var jsonDate = new Date();
+    if (arrDailyTimes.length) {
+      jsonDate = new Date(arrDailyTimes[0].date_val);
+    }
+    var formDate = new Date($j("form#dailyAttendanceContent input#dailyAttendanceDate").val());
+
+    if ( (arrDailyTimes.length === 0) ||
+         (jsonDate.toDateString() != formDate.toDateString()) ) {
+      updateDailyTimesForDate($j("form#dailyAttendanceContent input#dailyAttendanceDate").val());
+    }
  
     // add the buttons if they're not already there
     if ($j(`${selDailyFrmFldst} .qckbttns-row`).length === 0) {
