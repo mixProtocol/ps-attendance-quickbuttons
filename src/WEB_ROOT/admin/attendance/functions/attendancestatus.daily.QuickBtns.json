@@ -1,7 +1,7 @@
 [
   ~[if#sec.security.pagenone=/admin/attendance/functions/attendancestatus.daily.html]
   [else#sec]
-    [tlist_sql;
+    ~[tlist_sql;
     SELECT
       JSON_OBJECT (
         'date_val' VALUE TO_CHAR(cald.Date_Value, 'YYYY-MM-DD'), 
