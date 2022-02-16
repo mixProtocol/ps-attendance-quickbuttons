@@ -10,6 +10,10 @@
   };
 
   var arrDailyTimes = new Array();
+  // There's no GPV'able attendance_date value available on this page.
+  // TODO: Move the TList_SQL to a seperate JSON file and pass the date as an
+  //        argument in the AJAX call.
+
   arrDailyTimes.push(  /* ~[tlist_sql;
     SELECT
       JSON_OBJECT (
@@ -43,7 +47,7 @@
 
   function setInputToTime(inputKey, timeVal) {
     if (dictTimeEntryRows.hasOwnProperty(inputKey)) {
-      var elInputTime = $j(`tr:contains(${dictTimeEntryRows[inputKey]}) input.timeEntry`);
+      var elInputTime = $j(`${selDailyFrmFldst} div:has(label:contains(${dictTimeEntryRows[inputKey]})) input.timeEntry`);
       switch(timeVal) {
         case "now":
           $j(elInputTime).timeEntry('setTime', new Date());
