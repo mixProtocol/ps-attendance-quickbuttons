@@ -1,0 +1,31 @@
+[
+  ~[if#sec.security.pagenone=/admin/attendance/functions/attendancestatus.daily.html]
+  [else#sec]
+    [tlist_sql;
+    SELECT
+      JSON_OBJECT (
+        'date_val' VALUE TO_CHAR(cald.Date_Value, 'YYYY-MM-DD'), 
+        'dtid_HH' VALUE TO_CHAR(to_date(bsi.Daily_Time_In_Default,'sssss'), 'HH24'),
+        'dtid_MI' VALUE TO_CHAR(to_date(bsi.Daily_Time_In_Default,'sssss'), 'MI'),
+        'dtod_HH' VALUE TO_CHAR(to_date(bsi.Daily_Time_Out_Default,'sssss'), 'HH24'),
+        'dtod_MI' VALUE TO_CHAR(to_date(bsi.Daily_Time_Out_Default,'sssss'), 'MI')
+      )
+    FROM Calendar_Day cald
+    JOIN Cycle_Day cycd
+      ON cald.Cycle_Day_Id = cycd.Id
+    JOIN Bell_Schedule_Items bsi
+      ON cald.Bell_Schedule_Id = bsi.Bell_Schedule_Id
+    JOIN Period prd
+      ON bsi.Period_Id = prd.Id
+     AND cald.SchoolId = prd.SchoolId  
+    
+    WHERE cald.Date_Value = to_date('~(gpv.attendance_date;sqlText)', 'MM/DD/YYYY')
+      AND cald.SchoolId = ~(curschoolid)
+      AND bsi.Daily_Attendance_Code = 1
+    ORDER BY cald.Date_Value
+    ]
+    ~(jsonObj),
+    [/tlist_sql]
+  [/if#sec]
+  {}
+]
