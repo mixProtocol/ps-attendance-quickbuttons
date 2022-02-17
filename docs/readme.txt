@@ -8,6 +8,7 @@ The "Start/End of Day" buttons will be disabled if the Bell Schedule for the cur
 The stock example text, ie: "(Example entry: 08:00 AM)", is removed from the page in order to make room for the buttons.
 
 Release History
+1.11 / 20220216.01 - Fix to disable dashboard dialog buttons if no Start/End times are found in the bell schedule
 1.10 / 20220215.01 - Added support for the Daily Attendance dashboard's time entry dialogs
 1.00 / 20220205.01 - Initial Release
 
