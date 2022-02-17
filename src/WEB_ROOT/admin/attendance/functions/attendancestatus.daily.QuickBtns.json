@@ -4,7 +4,7 @@
     ~[tlist_sql;
     SELECT
       JSON_OBJECT (
-        'date_val' VALUE TO_CHAR(cald.Date_Value, 'YYYY-MM-DD'), 
+        'date_val' VALUE TO_CHAR(cald.Date_Value, 'MM/DD/YYYY'), 
         'dtid_HH' VALUE TO_CHAR(to_date(bsi.Daily_Time_In_Default,'sssss'), 'HH24'),
         'dtid_MI' VALUE TO_CHAR(to_date(bsi.Daily_Time_In_Default,'sssss'), 'MI'),
         'dtod_HH' VALUE TO_CHAR(to_date(bsi.Daily_Time_Out_Default,'sssss'), 'HH24'),

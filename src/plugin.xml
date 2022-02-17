@@ -3,7 +3,7 @@
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 		description="Attendance Time Entry Quickbuttons"
 		name="Attendance Time Entry Quickbuttons"
-		version="20220205.01"
+		version="20220215.01"
 		xsi:schemaLocation="http://plugin.powerschool.pearson.com plugin.xsd">
 		
 	<publisher name="George Skuse">

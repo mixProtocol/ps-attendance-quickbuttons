@@ -6,10 +6,10 @@
   var selDailyFrmFldst = "div#dailyClockInOutDialogTemplate form#dailydayform fieldset";
 
   var dictTimeEntryRows  = {
-    //"in":  "~[text:psx.jshtml.admin_students.attendance_clockinout.clock_in]",   // Clock In
-    //"out": "~[text:psx.jshtml.admin_students.attendance_clockinout.clock_out]"   // Clock Out
-    "in": "Clock In",
-    "out": "Clock Out"
+    "in":  "~[text:psx.jshtml.admin_students.attendance_clockinout.clock_in]",   // Clock In
+    "out": "~[text:psx.jshtml.admin_students.attendance_clockinout.clock_out]"   // Clock Out
+    // "in": "Clock In",
+    // "out": "Clock Out"
   };
 
   var arrDailyTimes = new Array();
