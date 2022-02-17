@@ -38,6 +38,23 @@
               arrDailyTimes.pop();
             }
           }
+
+          // Disable the Start/End_of_Day buttons if any of the following is true
+          //  - arrDailyTimes is an empty array
+          //  - arrDailyTimes[0] is an empty object
+          //  - arrDailyTimes[0].dtid_HH, .dtid_MI, .dtod_HH, or .dtod_MI are empty keys
+          if ( (arrDailyTimes.length == 0) ||
+              ($j.isEmptyObject(arrDailyTimes[0])) ||
+              (arrDailyTimes[0].dtid_HH == "") ||
+              (arrDailyTimes[0].dtid_MI == "") ||
+              (arrDailyTimes[0].dtod_MI == "") ||
+              (arrDailyTimes[0].dtod_MI == "") ) {
+            $j("#qckbttns-btnTimeIn-DayStart").prop("disabled",true);
+            $j("#qckbttns-btnTimeOut-DayEnd").prop("disabled",true);
+          } else {
+            $j("#qckbttns-btnTimeIn-DayStart").prop("disabled",false);
+            $j("#qckbttns-btnTimeOut-DayEnd").prop("disabled",false);
+          }
         },
         // TODO: refactor error as fail
         error: function () {
@@ -101,26 +118,14 @@
       btnTimeOut_Current.onclick = function() {setInputToTime("out", "now")};
       
       var btnTimeIn_DayStart = btnButtonTemplate.cloneNode();
+      btnTimeIn_DayStart.setAttribute('id','qckbttns-btnTimeIn-DayStart');
       btnTimeIn_DayStart.innerText = "Start of Day";
       btnTimeIn_DayStart.onclick = function() {setInputToTime("in", "daystart")};
       
-      var btnTimeIn_DayEnd = btnButtonTemplate.cloneNode();
-      btnTimeIn_DayEnd.innerText = "End of Day";
-      btnTimeIn_DayEnd.onclick = function() {setInputToTime("out", "dayend")};
-
-      // Disable the Start/End_of_Day buttons if any of the following is true
-      //  - arrDailyTimes is an empty array
-      //  - arrDailyTimes[0] is an empty object
-      //  - arrDailyTimes[0].dtid_HH, .dtid_MI, .dtod_HH, or .dtod_MI are empty keys
-      if ( (arrDailyTimes.length == 0) ||
-           ($j.isEmptyObject(arrDailyTimes[0])) ||
-           (arrDailyTimes[0].dtid_HH == "") ||
-           (arrDailyTimes[0].dtid_MI == "") ||
-           (arrDailyTimes[0].dtod_MI == "") ||
-           (arrDailyTimes[0].dtod_MI == "") ) {
-        btnTimeIn_DayStart.disabled = "true";
-        btnTimeIn_DayEnd.disabled = "true" ;
-      }
+      var btnTimeOut_DayEnd = btnButtonTemplate.cloneNode();
+      btnTimeOut_DayEnd.setAttribute('id','qckbttns-btnTimeOut-DayEnd');
+      btnTimeOut_DayEnd.innerText = "End of Day";
+      btnTimeOut_DayEnd.onclick = function() {setInputToTime("out", "dayend")};
       
       var fragQckBtnsRow_In = document.createDocumentFragment();
       fragQckBtnsRow_In.appendChild(document.createElement("span"));
@@ -132,7 +137,7 @@
       fragQckBtnsRow_Out.appendChild(document.createElement("span"));
       fragQckBtnsRow_Out.firstElementChild.setAttribute('class','qckbttns-row');
       fragQckBtnsRow_Out.firstElementChild.appendChild(btnTimeOut_Current);
-      fragQckBtnsRow_Out.firstElementChild.appendChild(btnTimeIn_DayEnd);
+      fragQckBtnsRow_Out.firstElementChild.appendChild(btnTimeOut_DayEnd);
 
       // reduce with of labels to 27% (stock is 35%) to make room for buttons
       $j(`${selDailyFrmFldst} label`).css('width','27%');

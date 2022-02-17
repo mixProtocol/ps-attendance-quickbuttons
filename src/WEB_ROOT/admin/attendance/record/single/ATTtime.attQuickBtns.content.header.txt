@@ -74,9 +74,9 @@
   btnTimeIn_DayStart.innerText = "Start of Day";
   btnTimeIn_DayStart.onclick = function() {setInputToTime("in", "daystart")};
   
-  var btnTimeIn_DayEnd = btnButtonTemplate.cloneNode();
-  btnTimeIn_DayEnd.innerText = "End of Day";
-  btnTimeIn_DayEnd.onclick = function() {setInputToTime("out", "dayend")};
+  var btnTimeOut_DayEnd = btnButtonTemplate.cloneNode();
+  btnTimeOut_DayEnd.innerText = "End of Day";
+  btnTimeOut_DayEnd.onclick = function() {setInputToTime("out", "dayend")};
   
   // Disable the Start/End_of_Day buttons if any of the following is true
   //  - arrDailyTimes is an empty array
@@ -89,7 +89,7 @@
        (arrDailyTimes[0].dtod_MI == "") ||
        (arrDailyTimes[0].dtod_MI == "") ) {
     btnTimeIn_DayStart.disabled = "true";
-    btnTimeIn_DayEnd.disabled = "true" ;
+    btnTimeOut_DayEnd.disabled = "true" ;
   }
 
   var fragQckBtnsRow_In = document.createDocumentFragment();
@@ -102,7 +102,7 @@
   fragQckBtnsRow_Out.appendChild(document.createElement("span"));
   fragQckBtnsRow_Out.firstElementChild.setAttribute('class','qckbttns-row');
   fragQckBtnsRow_Out.firstElementChild.appendChild(btnTimeOut_Current);
-  fragQckBtnsRow_Out.firstElementChild.appendChild(btnTimeIn_DayEnd);
+  fragQckBtnsRow_Out.firstElementChild.appendChild(btnTimeOut_DayEnd);
 
   $j( document ).ready(function() {
     $j(`tr:contains(${dictTimeEntryRows['in']}) td:has(input.timeEntry)`).contents().filter(function(){return this.nodeType === 3;}).remove();
